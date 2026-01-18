@@ -3,42 +3,644 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>STUDY GROUP WEEKLY CHALLENGE</title>
-<link rel="stylesheet" href="index.css">
+<title>2026 UTME Practical - Programmed by Sirmic (DevMic)</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f0f8ff;
+    color: #000;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  header {
+    background-color: #1e90ff;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  main {
+    flex: 1;
+    padding: 15px;
+    max-width: 800px;
+    margin: auto;
+    width: 100%;
+  }
+  #question {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+  }
+  #options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  button.option {
+    padding: 10px;
+    border: none;
+    background-color: #f0f8ff;
+    border: 2px solid #1e90ff;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 1rem;
+    transition: 0.2s;
+    justify-content: center;
+    margin-right: 20px;
+  }
+  button.option:hover {
+    background-color: #1e90ff;
+    color: white;
+  }
+  button.option.selected {
+    background-color: #1e90ff;
+    color: white;
+  }
+  #nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  #nav-buttons button {
+    padding: 10px 15px;
+    background-color: #1e90ff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    flex: 1;
+    margin: 0 5px;
+  }
+  #timer {
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: right;
+    margin-bottom: 10px;
+    margin-right: 20px;
+  }
+  #result {
+    margin-top: 20px;
+  }
+  .correct {
+    color: green;
+    font-weight: bold;
+  }
+  .wrong {
+    color: red;
+    font-weight: bold;
+  }
+  .review {
+    background-color: #e6f0ff;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+  @media(max-width: 500px){
+    button.option {
+      font-size: 0.9rem;
+    }
+    #nav-buttons button {
+      font-size: 0.9rem;
+      padding: 8px 10px;
+    }
+  }
+</style>
 </head>
 <body>
+<header>2026 UTME Practical - Programmed by Sirmic (DevMic)</header>
+<p style="color: #1e90ff; font-weight: bold; text-align: center;">Screenshot your Score.</p>
+<marquee behavior="" direction=""><p style="color: red; text-align: center;">NO DATABASE</p></marquee>
+<main>
+  <div id="timer" style="color: red;">Time Remaining: 60:00</div>
+  <div id="question"></div>
+  <div id="options"></div>
+  <div id="nav-buttons" style="margin: 25px;">
+    <button onclick="prevQuestion()">Previous</button>
+    <button onclick="nextQuestion()">Next</button>
+    <button onclick="submitQuiz()">Submit</button>
+  </div>
+  <div id="result"></div>
+</main>
 
-<header>
-STUDY GROUP WEEKLY CHALLENGE ON CHEMISTRY<br>
-PROGRAMMED BY DEV._SIRMIC
-</header>
+<script>
+const quiz = [
+  // ---------------- MECHANICS (1–20) ----------------
+  {
+    question: "A force of 16 N acts on a 4 kg body at rest. Find its velocity after 5 s.",
+    options: ["4 m/s", "10 m/s", "20 m/s", "50 m/s"],
+    answer: 2
+  },
+  {
+    question: "Inertia is the ability of a body to:",
+    options: ["Overcome gravity", "Stop moving", "Start moving easily", "Resist change in motion"],
+    answer: 3
+  },
+  {
+    question: "A 0.1 kg arrow hits a 0.4 kg block at rest. Find their common velocity.",
+    options: ["15 m/s", "7.5 m/s", "3.8 m/s", "3.0 m/s"],
+    answer: 3
+  },
+  {
+    question: "If the net force on a body is zero, its momentum will:",
+    options: ["Increase", "Decrease", "Remain constant", "Change direction"],
+    answer: 2
+  },
+  {
+    question: "A stone and feather fall in vacuum. They reach the ground:",
+    options: ["Stone first", "Feather first", "Same time", "Never"],
+    answer: 2
+  },
+  {
+    question: "The SI unit of force is:",
+    options: ["Joule", "Watt", "Newton", "Pascal"],
+    answer: 2
+  },
+  {
+    question: "Which of these is a vector quantity?",
+    options: ["Speed", "Distance", "Velocity", "Time"],
+    answer: 2
+  },
+  {
+    question: "Acceleration is the rate of change of:",
+    options: ["Speed", "Force", "Velocity", "Distance"],
+    answer: 2
+  },
+  {
+    question: "Momentum is given by:",
+    options: ["mv²", "mv", "ma", "v/t"],
+    answer: 1
+  },
+  {
+    question: "Newton’s third law states that:",
+    options: ["Force = ma", "Motion continues", "Action = Reaction", "Energy is conserved"],
+    answer: 2
+  },
+  {
+    question: "A car moving with constant velocity has acceleration:",
+    options: ["1 m/s²", "2 m/s²", "-1 m/s²", "0"],
+    answer: 3
+  },
+  {
+    question: "The slope of a velocity-time graph gives:",
+    options: ["Distance", "Speed", "Acceleration", "Force"],
+    answer: 2
+  },
+  {
+    question: "Work is done when:",
+    options: ["Force is applied", "Object moves", "Force causes motion", "Energy is stored"],
+    answer: 2
+  },
+  {
+    question: "The unit of work is:",
+    options: ["Watt", "Joule", "Newton", "Pascal"],
+    answer: 1
+  },
+  {
+    question: "Power is defined as:",
+    options: ["Work × Time", "Work ÷ Time", "Force × Distance", "Energy ÷ Mass"],
+    answer: 1
+  },
+  {
+    question: "A slowing vehicle is said to be:",
+    options: ["Accelerating", "At rest", "Decelerating", "Stationary"],
+    answer: 2
+  },
+  {
+    question: "Force × distance equals:",
+    options: ["Power", "Momentum", "Work", "Energy"],
+    answer: 2
+  },
+  {
+    question: "A quantity with magnitude and direction is:",
+    options: ["Mass", "Speed", "Force", "Time"],
+    answer: 2
+  },
+  {
+    question: "The tendency to remain in motion is due to:",
+    options: ["Gravity", "Inertia", "Friction", "Energy"],
+    answer: 1
+  },
+  {
+    question: "Gun recoil is explained by:",
+    options: ["First law", "Second law", "Third law", "Fourth law"],
+    answer: 2
+  },
 
-<div class="container">
+  // ---------------- ENERGY (21–35) ----------------
+  {
+    question: "Energy is the ability to:",
+    options: ["Move", "Stop", "Do work", "Rest"],
+    answer: 2
+  },
+  {
+    question: "Kinetic energy is:",
+    options: ["mv", "½mv²", "mgh", "ma"],
+    answer: 1
+  },
+  {
+    question: "Potential energy is:",
+    options: ["mv²", "ma", "mgh", "Fd"],
+    answer: 2
+  },
+  {
+    question: "A 50 kg mass falls 2 m. Its KE is:",
+    options: ["250 J", "1000 J", "10,000 J", "100,000 J"],
+    answer: 1
+  },
+  {
+    question: "Energy conservation means:",
+    options: ["Energy increases", "Energy decreases", "Energy is constant", "Energy is destroyed"],
+    answer: 2
+  },
+  {
+    question: "The unit of power is:",
+    options: ["Joule", "Newton", "Watt", "Pascal"],
+    answer: 2
+  },
+  {
+    question: "Efficiency equals:",
+    options: ["Input ÷ Output", "Output ÷ Input", "Load ÷ Effort", "Force ÷ Distance"],
+    answer: 1
+  },
+  {
+    question: "An ideal machine has efficiency:",
+    options: ["50%", "75%", "100%", "10%"],
+    answer: 2
+  },
+  {
+    question: "Energy loss is mainly due to:",
+    options: ["Speed", "Gravity", "Friction", "Time"],
+    answer: 2
+  },
+  {
+    question: "A renewable energy source is:",
+    options: ["Coal", "Solar", "Petrol", "Diesel"],
+    answer: 1
+  },
+  {
+    question: "Geothermal energy comes from:",
+    options: ["Sun", "Water", "Earth’s heat", "Wind"],
+    answer: 2
+  },
+  {
+    question: "Power increases when:",
+    options: ["Time increases", "Work decreases", "Work per second increases", "Distance reduces"],
+    answer: 2
+  },
+  {
+    question: "The unit of energy is:",
+    options: ["Watt", "Newton", "Joule", "Tesla"],
+    answer: 2
+  },
+  {
+    question: "A machine that reduces effort:",
+    options: ["Lever", "Pulley", "Wheel", "All"],
+    answer: 3
+  },
+  {
+    question: "Mechanical advantage is:",
+    options: ["Effort ÷ Load", "Load ÷ Effort", "Work ÷ Time", "Force ÷ Distance"],
+    answer: 1
+  },
 
-    <!-- Timer -->
-    <div id="timer" class="timer"></div>
+  // ---------------- ELECTRICITY (36–50) ----------------
+  {
+    question: "Electric current is the flow of:",
+    options: ["Protons", "Electrons", "Neutrons", "Atoms"],
+    answer: 1
+  },
+  {
+    question: "Unit of current is:",
+    options: ["Volt", "Watt", "Ampere", "Ohm"],
+    answer: 2
+  },
+  {
+    question: "Voltage is measured in:",
+    options: ["Ampere", "Volt", "Ohm", "Watt"],
+    answer: 1
+  },
+  {
+    question: "Resistance unit is:",
+    options: ["Volt", "Ampere", "Ohm", "Joule"],
+    answer: 2
+  },
+  {
+    question: "Ohm’s law is:",
+    options: ["V = IR", "P = VI", "F = ma", "E = mc²"],
+    answer: 0
+  },
+  {
+    question: "Current is measured with:",
+    options: ["Voltmeter", "Ammeter", "Thermometer", "Barometer"],
+    answer: 1
+  },
+  {
+    question: "Voltage is measured with:",
+    options: ["Ammeter", "Voltmeter", "Galvanometer", "Ohmmeter"],
+    answer: 1
+  },
+  {
+    question: "Dry cells produce:",
+    options: ["AC", "DC", "Both", "None"],
+    answer: 1
+  },
+  {
+    question: "Ebonite rubbed with fur becomes:",
+    options: ["Positive", "Neutral", "Negative", "Both"],
+    answer: 2
+  },
+  {
+    question: "Fuse wire melts due to:",
+    options: ["Voltage", "Resistance", "Heating effect", "Magnetism"],
+    answer: 2
+  },
+  {
+    question: "Electrical energy is:",
+    options: ["F × d", "P × t", "m × g", "v × t"],
+    answer: 1
+  },
+  {
+    question: "Copper is a:",
+    options: ["Insulator", "Conductor", "Semiconductor", "Resistor"],
+    answer: 1
+  },
+  {
+    question: "Lightning is an:",
+    options: ["Explosion", "Discharge", "Reflection", "Vibration"],
+    answer: 1
+  },
+  {
+    question: "Potential difference causes:",
+    options: ["Heat", "Current", "Mass", "Light"],
+    answer: 1
+  },
+  {
+    question: "A conductor allows:",
+    options: ["Light", "Heat", "Current", "Sound"],
+    answer: 2
+  },
 
-    <!-- Quiz Area -->
-    <div id="quiz"></div>
+  // ---------------- SEMICONDUCTORS (51–60) ----------------
+  {
+    question: "Silicon is a:",
+    options: ["Conductor", "Insulator", "Semiconductor", "Resistor"],
+    answer: 2
+  },
+  {
+    question: "Diode allows current in:",
+    options: ["Both directions", "One direction", "No direction", "Random"],
+    answer: 1
+  },
+  {
+    question: "LED means:",
+    options: ["Light Energy Device", "Light Emitting Diode", "Low Electric Device", "Light Engine Diode"],
+    answer: 1
+  },
+  {
+    question: "Transistors are used for:",
+    options: ["Cooling", "Heating", "Amplification", "Lighting"],
+    answer: 2
+  },
+  {
+    question: "Germanium is a:",
+    options: ["Metal", "Insulator", "Semiconductor", "Plastic"],
+    answer: 2
+  },
+  {
+    question: "P-type has excess:",
+    options: ["Electrons", "Holes", "Neutrons", "Protons"],
+    answer: 1
+  },
+  {
+    question: "N-type has excess:",
+    options: ["Electrons", "Holes", "Atoms", "Protons"],
+    answer: 0
+  },
+  {
+    question: "Semiconductors conduct better when:",
+    options: ["Cold", "Dry", "Heated", "Frozen"],
+    answer: 2
+  },
+  {
+    question: "An insulator resists:",
+    options: ["Heat", "Light", "Current", "Sound"],
+    answer: 2
+  },
+  {
+    question: "Example of insulator:",
+    options: ["Copper", "Iron", "Rubber", "Aluminium"],
+    answer: 2
+  },
 
-    <!-- Buttons -->
-    <div class="buttons">
-        <button id="nextBtn">NEXT</button>
-        <button id="submitBtn">SUBMIT</button>
-    </div>
+  // ---------------- EARTH PHYSICS (61–70) ----------------
+  {
+    question: "Force pulling objects to Earth is:",
+    options: ["Magnetism", "Gravity", "Friction", "Tension"],
+    answer: 1
+  },
+  {
+    question: "g ≈",
+    options: ["5 m/s²", "10 m/s²", "15 m/s²", "20 m/s²"],
+    answer: 1
+  },
+  {
+    question: "Tides are caused by:",
+    options: ["Wind", "Moon’s gravity", "Sunlight", "Rain"],
+    answer: 1
+  },
+  {
+    question: "Earth’s magnetic field protects from:",
+    options: ["Heat", "Rain", "Solar radiation", "Wind"],
+    answer: 2
+  },
+  {
+    question: "Fossil fuels come from:",
+    options: ["Water", "Air", "Dead plants & animals", "Rocks"],
+    answer: 2
+  },
+  {
+    question: "Earth rotates about its:",
+    options: ["Orbit", "Axis", "Surface", "Core"],
+    answer: 1
+  },
+  {
+    question: "Day and night are due to:",
+    options: ["Revolution", "Rotation", "Gravity", "Tilt"],
+    answer: 1
+  },
+  {
+    question: "Earth’s core is mainly:",
+    options: ["Wood", "Iron & Nickel", "Water", "Air"],
+    answer: 1
+  },
+  {
+    question: "Wind energy comes from:",
+    options: ["Gravity", "Air movement", "Earth heat", "Magnetism"],
+    answer: 1
+  },
+  {
+    question: "Earth’s heat energy is called:",
+    options: ["Solar", "Wind", "Geothermal", "Nuclear"],
+    answer: 2
+  },
 
-    <!-- Score -->
-    <div class="score" id="score"></div>
+  // ---------------- PLANCK'S CONSTANT (71–80) ----------------
+  {
+    question: "Planck’s constant is denoted by:",
+    options: ["g", "h", "c", "k"],
+    answer: 1
+  },
+  {
+    question: "Planck’s constant relates energy to:",
+    options: ["Mass", "Frequency", "Velocity", "Charge"],
+    answer: 1
+  },
+  {
+    question: "E = hf means energy is proportional to:",
+    options: ["Wavelength", "Speed", "Frequency", "Mass"],
+    answer: 2
+  },
+  {
+    question: "The unit of Planck’s constant is:",
+    options: ["J", "Js", "N", "C"],
+    answer: 1
+  },
+  {
+    question: "Planck’s constant is used in:",
+    options: ["Mechanics", "Thermodynamics", "Quantum physics", "Optics"],
+    answer: 2
+  },
+  {
+    question: "Higher frequency means:",
+    options: ["Lower energy", "Same energy", "Higher energy", "No energy"],
+    answer: 2
+  },
+  {
+    question: "Photoelectric effect supports:",
+    options: ["Wave theory", "Particle theory", "Quantum theory", "Classical theory"],
+    answer: 2
+  },
+  {
+    question: "Photon energy depends on:",
+    options: ["Mass", "Frequency", "Speed", "Charge"],
+    answer: 1
+  },
+  {
+    question: "Planck’s constant value is about:",
+    options: ["6.6 × 10⁻³⁴ Js", "9.8", "3 × 10⁸", "1.6 × 10⁻¹⁹"],
+    answer: 0
+  },
+  {
+    question: "Quantum theory explains:",
+    options: ["Gravity", "Light emission", "Friction", "Motion"],
+    answer: 1
+  }
+];
+let currentQuestion = 0;
+let userAnswers = new Array(quiz.length).fill(null);
+let timerSeconds = 3600; // 3600s = 1 hour
 
-    <!-- Leaderboard -->
-    <h3>Leaderboard</h3>
-    <ol id="leaderboard"></ol>
+function updateTimer() {
+  const minutes = Math.floor(timerSeconds/60).toString().padStart(2,'0');
+  const seconds = (timerSeconds%60).toString().padStart(2,'0');
+  document.getElementById('timer').innerText = `Time Remaining: ${minutes}:${seconds}`;
+  if(timerSeconds<=0){
+    submitQuiz();
+  } else {
+    timerSeconds--;
+  }
+}
 
-    <!-- Answer Review -->
-    <div id="review"></div>
+setInterval(updateTimer,1000);
 
-</div>
+function loadQuestion(){
+  const q = quiz[currentQuestion];
+  document.getElementById("question").innerText = `Q${currentQuestion+1}: ${q.question}`;
+  const optionsDiv = document.getElementById("options");
+  optionsDiv.innerHTML = "";
+  q.options.forEach((option,index)=>{
+    const btn = document.createElement("button");
+    btn.innerText = option;
+    btn.className = "option";
+    if(userAnswers[currentQuestion]===index) btn.classList.add("selected");
+    btn.onclick = ()=>{
+      userAnswers[currentQuestion]=index;
+      loadQuestion();
+    };
+    optionsDiv.appendChild(btn);
+  });
+}
 
-<script src="script.js"></script>
+function nextQuestion(){
+  if(currentQuestion<quiz.length-1){
+    currentQuestion++;
+    loadQuestion();
+  }
+}
+
+function prevQuestion(){
+  if(currentQuestion>0){
+    currentQuestion--;
+    loadQuestion();
+  }
+}
+
+function submitQuiz(){
+  let score = 0;
+  quiz.forEach((q,i)=>{
+    if(userAnswers[i]===q.answer) score++;
+  });
+
+  const resultDiv = document.getElementById("result");
+  resultDiv.innerHTML = `<h2>Your Score: ${score} / ${quiz.length}</h2>`;
+
+  quiz.forEach((q,i)=>{
+    const userAns = userAnswers[i];
+    const correctAns = q.answer;
+    const userText = userAns!==null?q.options[userAns]:"Not answered";
+    const correctText = q.options[correctAns];
+    const div = document.createElement("div");
+    div.className="review";
+    div.innerHTML=`
+      <p><b>Q${i+1}:</b> ${q.question}</p>
+      <p>Your Answer: <span class="${userAns===correctAns?"correct":"wrong"}">${userText}</span></p>
+      <p>Correct Answer: <span class="correct">${correctText}</span></p>
+    `;
+    resultDiv.appendChild(div);
+  });
+
+  saveLeaderboard(score);
+}
+
+function saveLeaderboard(score){
+  const name = prompt("Enter your name for the leaderboard:","Student");
+  if(!name) return;
+  const leaderboard = JSON.parse(localStorage.getItem("leaderboard")||"[]");
+  leaderboard.push({name:name,score:score,date:new Date().toLocaleString()});
+  leaderboard.sort((a,b)=>b.score-a.score);
+  if(leaderboard.length>10) leaderboard.pop();
+  localStorage.setItem("leaderboard",JSON.stringify(leaderboard));
+  displayLeaderboard();
+}
+
+function displayLeaderboard(){
+  let leaderboard = JSON.parse(localStorage.getItem("leaderboard")||"[]");
+  if(leaderboard.length===0) return;
+  const resultDiv = document.getElementById("result");
+  const div = document.createElement("div");
+  div.innerHTML="<h3>Leaderboard (Top 10)</h3>";
+  leaderboard.forEach((entry,i)=>{
+    div.innerHTML+=`<p>${i+1}. ${entry.name} - ${entry.score} / ${quiz.length} (${entry.date})</p>`;
+  });
+  resultDiv.appendChild(div);
+}
+
+loadQuestion();
+</script>
 </body>
 </html>
